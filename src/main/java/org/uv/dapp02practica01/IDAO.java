@@ -6,10 +6,15 @@ import java.util.List;
  * @author Codigy
  * @param <T>
  */
-public interface IDAO<T> {
+public interface IDAO<T, ID> {
+
+    public T buscarById(ID id);
+
+    List<T> buscarAll();
+
     public boolean guardar(T p);
-    public boolean modificar(T p);
+
     public boolean eliminar(T p);
-    public T buscarbyId(int id);
-    public List<T> buscarAll();
+
+    public boolean modificar(T p);
 }

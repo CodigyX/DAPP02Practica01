@@ -22,46 +22,50 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "venta")
 public class Venta implements Serializable {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+@Id
+    @Column(name="idventa")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, 
             generator = "venta_idventa_seq")
     @SequenceGenerator(name = "venta_idventa_seq",
             sequenceName = "venta_idventa_seq",
-            allocationSize = 1,
-            initialValue = 1)
-    @Column(name = "idventa")
+            initialValue = 1,
+            allocationSize = 1)
     private long id;
-    @Column(name = "cliente")
+    @Column
+    private java.sql.Date fecha;
+    @Column
     private String cliente;
-    @Column(name = "fecha")
-    private Date fecha;
-    @Column(name = "total")
+    @Column
     private double total;
-
-    //@OneToMany(mappedBy = "venta")
-    @OneToMany(mappedBy = "venta", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    //@OneToMany(mappedBy = "venta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetalleVenta> detalleVenta;
-
-    public Venta() {
-        detalleVenta = new ArrayList<>();
+    public long getId() {
+        return id;
     }
 
-    public List<DetalleVenta> getDetalleVenta() {
+    @OneToMany (mappedBy = "venta", fetch = FetchType.EAGER , cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleVenta> detalleVenta;
+    
+    public Venta(){
+        detalleVenta = new ArrayList<>();
+    }
+    
+    public List<DetalleVenta> getDetalleVenta(){
         return detalleVenta;
     }
 
     public void setDetalleVenta(List<DetalleVenta> detalleVenta) {
         this.detalleVenta = detalleVenta;
-    }
-
-    public long getId() {
-        return id;
-    }
-
+    }    
+            
     public void setId(long id) {
         this.id = id;
+    }
+
+    public java.sql.Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(java.sql.Date fecha) {
+        this.fecha = fecha;
     }
 
     public String getCliente() {
@@ -70,14 +74,6 @@ public class Venta implements Serializable {
 
     public void setCliente(String cliente) {
         this.cliente = cliente;
-    }
-
-    public Date getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
     }
 
     public double getTotal() {

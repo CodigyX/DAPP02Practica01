@@ -20,24 +20,22 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "detalleventa")
 public class DetalleVenta implements Serializable {
-    @ManyToOne()
-    @JoinColumn(name = "idventa")
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+     @Id
+    @Column(name="idlinea")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, 
             generator = "detalleventa_idlinea_seq")
     @SequenceGenerator(name = "detalleventa_idlinea_seq",
             sequenceName = "detalleventa_idlinea_seq",
-            allocationSize = 1,
-            initialValue = 1)
-    @Column(name = "idventa")        
-    private long id;
-    @Column(name = "cantidad")
-    private double cantidad;
-    @Column(name = "precio")
-    private double precio;
-    @Column(name = "producto")
-    private String producto;    
-    
+            initialValue = 1,
+            allocationSize = 1)
+     
+    private long id;    
+    @Column
+    private double cantidad;    
+    @Column
+    private double precio;    
+    @Column
+    private String producto;
     @ManyToOne
     @JoinColumn(name="idventa")
     private Venta venta;
@@ -48,8 +46,8 @@ public class DetalleVenta implements Serializable {
 
     public void setVenta(Venta venta) {
         this.venta = venta;
-    }    
-
+    }
+    
     public long getId() {
         return id;
     }
@@ -80,5 +78,5 @@ public class DetalleVenta implements Serializable {
 
     public void setProducto(String producto) {
         this.producto = producto;
-    }   
+    }
 }

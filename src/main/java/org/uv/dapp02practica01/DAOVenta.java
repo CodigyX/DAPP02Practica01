@@ -6,11 +6,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
- * DAO for handling Venta entities.
  * 
  * @author Codigy
  */
-public class DAOVenta implements IDAO<Venta> {
+public class DAOVenta implements IDAO<Venta, Integer> {
 
     private final ConexionDB con;
 
@@ -20,87 +19,72 @@ public class DAOVenta implements IDAO<Venta> {
 
     @Override
     public boolean guardar(Venta pojo) {
-        try (SessionFactory sf = HibernateUtil.getSessionFactory();
-             Session session = sf.getCurrentSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.save(pojo);
-            transaction.commit();
-            System.out.println("Se guardó con el id " + pojo.getId());
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.save(pojo);
+
+//        for (DetalleVenta det : pojo.getDetalleVenta()) {
+//            session.save(det);
+//        }
+
+        transaction.commit();
+        System.out.println("Se guardo con el id " + pojo.getId());
+        return true;
+
     }
 
     @Override
     public boolean eliminar(Venta pojo) {
-        try (SessionFactory sf = HibernateUtil.getSessionFactory();
-             Session session = sf.getCurrentSession()) {
-            Transaction transaction = session.beginTransaction();
-            session.delete(pojo);
-            transaction.commit();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(pojo);
+        transaction.commit();
+        return true;
     }
 
     @Override
     public boolean modificar(Venta pojo) {
-        try (SessionFactory sf = HibernateUtil.getSessionFactory();
-             Session session = sf.getCurrentSession()) {
-            Transaction transaction = session.beginTransaction();
-            Venta existingVenta = session.get(Venta.class, pojo.getId());
-            if (existingVenta != null) {
-                existingVenta.setCliente(pojo.getCliente());
-                existingVenta.setFecha(pojo.getFecha());
-                existingVenta.setTotal(pojo.getTotal());
-                existingVenta.setDetalleVenta(pojo.getDetalleVenta());
-                session.update(existingVenta);
-                transaction.commit();
-                return true;
-            } else {
-                // Handle case where the entity doesn't exist
-                transaction.rollback();
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        Venta existingVenta = session.get(Venta.class, pojo.getId());
+        if (existingVenta != null) {
+            existingVenta.setCliente(pojo.getCliente());
+            existingVenta.setFecha(pojo.getFecha());
+            existingVenta.setTotal(pojo.getTotal());
+            existingVenta.setDetalleVenta(pojo.getDetalleVenta());
+            session.update(existingVenta);
+            transaction.commit();
+            return true;
+        } else {
+            // Handle case where the entity doesn't exist
+            transaction.rollback();
             return false;
         }
     }
 
+    @Override
     public Venta buscarById(Integer id) {
-        try (SessionFactory sf = HibernateUtil.getSessionFactory();
-             Session session = sf.getCurrentSession()) {
-            Transaction transaction = session.beginTransaction();
-            Venta vent = session.get(Venta.class, id);
-            transaction.commit();
-            return vent;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        Venta vent = session.get(Venta.class, id);
+        transaction.commit();
+        return vent;
     }
 
     @Override
     public List<Venta> buscarAll() {
-        try (SessionFactory sf = HibernateUtil.getSessionFactory();
-             Session session = sf.getCurrentSession()) {
-            Transaction transaction = session.beginTransaction();
-            List<Venta> ventas = session.createQuery("FROM Venta").list();
-            transaction.commit();
-            return ventas;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+        SessionFactory sf = HibernateUtil.getSessionFactory();
+        Session session = sf.getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        List<Venta> ventas = session.createQuery("FROM venta").list();
+        transaction.commit();
+        return ventas;
 
-    @Override
-    public Venta buscarbyId(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
